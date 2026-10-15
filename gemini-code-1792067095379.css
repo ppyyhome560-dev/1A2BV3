@@ -1,0 +1,98 @@
+:root {
+    --bg-color: #f0f3f8;
+    --card-bg: #ffffff;
+    --text-color: #2c3e50;
+    --border-color: #e2e8f0;
+    --primary-color: #3b82f6;
+    --primary-hover: #2563eb;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-color: #f8fafc;
+    --border-color: #334155;
+    --primary-color: #38bdf8;
+    --primary-hover: #0284c7;
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+* { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; transition: background-color 0.2s, color 0.2s; }
+body { background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px 10px; display: flex; justify-content: center; }
+
+.theme-toggle { position: fixed; top: 15px; right: 15px; display: flex; gap: 8px; z-index: 100; }
+.theme-toggle button { background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+
+.container { background: var(--card-bg); width: 100%; max-width: 650px; border-radius: 20px; padding: 25px; box-shadow: var(--shadow); text-align: center; }
+header h1 { margin: 0; font-size: 28px; }
+.badge { background: var(--primary-color); color: white; font-size: 13px; padding: 2px 8px; border-radius: 12px; }
+.subtitle { margin: 4px 0 10px; font-size: 13px; opacity: 0.7; }
+
+/* 等級經驗條 */
+.user-level-bar { font-size: 13px; font-weight: bold; margin-bottom: 15px; }
+.xp-progress-bg { background: rgba(0,0,0,0.1); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 4px; }
+.xp-progress-fill { background: var(--success-color); height: 100%; width: 0%; transition: width 0.4s; }
+
+/* 模式與難度 */
+.mode-select { display: flex; gap: 8px; margin-bottom: 15px; }
+.mode-select button { flex: 1; padding: 10px; border: none; border-radius: 10px; background: rgba(0,0,0,0.05); color: var(--text-color); font-weight: bold; cursor: pointer; }
+.mode-select button.active { background: var(--primary-color); color: white; }
+
+.settings-card { background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); padding: 12px; border-radius: 12px; margin-bottom: 15px; }
+.difficulty-title { font-size: 13px; font-weight: bold; margin-bottom: 8px; }
+.difficulty-buttons { display: flex; gap: 6px; justify-content: center; }
+.btn-diff { flex: 1; padding: 8px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); border-radius: 8px; cursor: pointer; font-size: 13px; }
+.btn-diff.active { background: var(--warning-color); color: white; border-color: var(--warning-color); font-weight: bold; }
+.diff-desc-text { font-size: 12px; opacity: 0.75; margin-top: 8px; }
+
+/* 狀態欄 */
+.status-bar { display: flex; justify-content: space-around; font-size: 15px; margin-bottom: 15px; font-weight: bold; }
+.turn-timer { color: var(--danger-color); }
+
+.panel-box { background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); padding: 18px; border-radius: 12px; margin-bottom: 15px; }
+.skills-bar { display: flex; gap: 8px; justify-content: center; margin-bottom: 12px; }
+.btn-skill { background: rgba(59, 130, 246, 0.1); color: var(--primary-color); border: 1px solid var(--primary-color); padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; }
+
+.input-row { display: flex; gap: 8px; justify-content: center; }
+input[type="text"] { padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 16px; background: var(--card-bg); color: var(--text-color); text-align: center; letter-spacing: 2px; font-weight: bold; }
+button { padding: 10px 16px; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; }
+.btn-primary { background: var(--primary-color); color: white; }
+.btn-danger { background: var(--danger-color); color: white; }
+.btn-success { background: var(--success-color); color: white; }
+.full-width { width: 100%; margin-top: 10px; }
+.hidden { display: none !important; }
+
+/* 鍵盤與數字助手 */
+.keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; max-width: 260px; margin: 12px auto 0; }
+.keypad button { padding: 10px; font-size: 16px; background: rgba(0,0,0,0.05); color: var(--text-color); border-radius: 8px; }
+.btn-key-danger { color: var(--danger-color) !important; }
+.btn-key-warning { color: var(--warning-color) !important; }
+
+.number-helper { margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border-color); }
+.helper-title { font-size: 12px; opacity: 0.8; margin-bottom: 6px; }
+.helper-grid { display: flex; justify-content: center; gap: 5px; }
+.num-tag { width: 30px; height: 30px; padding: 0; border-radius: 50%; background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-color); }
+.num-tag.disabled { text-decoration: line-through; opacity: 0.3; background: #888; }
+.num-tag.highlight { background: var(--success-color); color: white; }
+
+/* 歷史紀錄與成就 */
+.history-container { display: flex; gap: 10px; margin-bottom: 15px; }
+.history-column { flex: 1; background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; max-height: 200px; overflow-y: auto; text-align: left; }
+.history-column h3 { font-size: 13px; margin: 0 0 8px; opacity: 0.8; }
+ul { list-style: none; padding: 0; margin: 0; }
+li { padding: 5px 8px; border-bottom: 1px solid var(--border-color); font-size: 13px; display: flex; justify-content: space-between; }
+.high-score { background: rgba(16, 185, 129, 0.15); font-weight: bold; }
+
+.achieve-card { background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; margin-bottom: 10px; }
+.achieve-card h3 { margin: 0 0 8px; font-size: 13px; opacity: 0.8; }
+.achieve-grid { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.badge-item { padding: 4px 8px; border-radius: 6px; font-size: 11px; background: rgba(0,0,0,0.05); opacity: 0.4; }
+.badge-item.unlocked { opacity: 1; background: var(--warning-color); color: white; font-weight: bold; }
+
+.msg-box { min-height: 20px; font-weight: bold; color: var(--danger-color); margin: 6px 0; font-size: 14px; }
+.shake { animation: shake 0.4s ease-in-out; }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }

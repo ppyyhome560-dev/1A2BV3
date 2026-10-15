@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1A2B Plus - 終極大師版</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 引入 Canvas Confetti 勝利彩帶特效庫 -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <div class="theme-toggle">
+        <button id="btn-sound" onclick="toggleSound()">🔊 音效: 開</button>
+        <button id="btn-theme" onclick="toggleTheme()">🌙 深色模式</button>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>🎯 1A2B <span class="badge">PRO</span></h1>
+            <p class="subtitle">道具技能．每日挑戰．地獄 AI 演算法</p>
+            <div class="user-level-bar">
+                <span id="user-title">新手猜心師</span> (Lv.<span id="user-level">1</span>)
+                <div class="xp-progress-bg"><div id="xp-progress" class="xp-progress-fill"></div></div>
+            </div>
+        </header>
+
+        <!-- 模式切換 -->
+        <div class="mode-select">
+            <button id="btn-pve" class="active" onclick="switchMode('pve')">🤖 AI 對戰</button>
+            <button id="btn-single" onclick="switchMode('single')">🎯 單人闖關</button>
+            <button id="btn-daily" onclick="switchMode('daily')">📅 每日挑戰</button>
+        </div>
+
+        <!-- 難度分類選擇 -->
+        <div id="difficulty-card" class="settings-card">
+            <div class="difficulty-title">選擇遊戲難度：</div>
+            <div class="difficulty-buttons">
+                <button class="btn-diff" id="diff-easy" onclick="setDifficulty('easy')">🌱 簡單</button>
+                <button class="btn-diff active" id="diff-normal" onclick="setDifficulty('normal')">⚔️ 普通</button>
+                <button class="btn-diff" id="diff-hard" onclick="setDifficulty('hard')">🔥 困難</button>
+                <button class="btn-diff" id="diff-hell" onclick="setDifficulty('hell')">💀 地獄</button>
+            </div>
+            <div id="diff-desc" class="diff-desc-text">4 位數 | 10 次機會 | 標準思考時間</div>
+        </div>
+
+        <!-- 狀態資訊欄 -->
+        <div class="status-bar">
+            <div class="status-item">⏱️ 時間：<strong id="timer">0</strong>s <span id="round-timer-box" class="turn-timer hidden">(回合: <span id="round-timer">15</span>s)</span></div>
+            <div class="status-item">🎯 剩餘：<strong id="attempts-left">10</strong>次</div>
+        </div>
+
+        <!-- 機器人模式：設定秘密數字 -->
+        <div id="pve-setup" class="panel-box">
+            <h3>🔒 設定你的秘密數字</h3>
+            <p>請輸入讓機器人猜的數字 (數字不重複)：</p>
+            <div class="input-row">
+                <input type="text" id="player-secret-input" placeholder="例如：1234" maxlength="5">
+                <button class="btn-primary" onclick="confirmPlayerSecret()">確認並開始</button>
+            </div>
+        </div>
+
+        <!-- 主要遊戲區域 -->
+        <div id="play-area" class="panel-box hidden">
+            <!-- 道具技能區域 -->
+            <div class="skills-bar">
+                <button class="btn-skill" onclick="useSkill('mine')">🧹 掃雷卡 (<span id="skill-mine-count">2</span>)</button>
+                <button class="btn-skill" onclick="useSkill('peek')">👁️ 透視卡 (<span id="skill-peek-count">1</span>)</button>
+                <button class="btn-skill" onclick="useSkill('add')">➕ 加次卡 (<span id="skill-add-count">1</span>)</button>
+            </div>
+
+            <div class="input-row">
+                <input type="text" id="user-guess-input" placeholder="輸入猜測數字" maxlength="5">
+                <button class="btn-primary" onclick="handleUserGuess()">送出猜測</button>
+            </div>
+            <p id="msg-box" class="msg-box"></p>
+
+            <!-- 虛擬數字鍵盤 -->
+            <div class="keypad">
+                <button onclick="pressKey('1')">1</button>
+                <button onclick="pressKey('2')">2</button>
+                <button onclick="pressKey('3')">3</button>
+                <button onclick="pressKey('4')">4</button>
+                <button onclick="pressKey('5')">5</button>
+                <button onclick="pressKey('6')">6</button>
+                <button onclick="pressKey('7')">7</button>
+                <button onclick="pressKey('8')">8</button>
+                <button onclick="pressKey('9')">9</button>
+                <button onclick="pressKey('clear')" class="btn-key-danger">清空</button>
+                <button onclick="pressKey('0')">0</button>
+                <button onclick="pressKey('back')" class="btn-key-warning">⌫</button>
+            </div>
+
+            <!-- 0-9 數字輔助面板 -->
+            <div class="number-helper">
+                <div class="helper-title">✏️ 數字思考助手 (點擊標記/劃掉)：</div>
+                <div class="helper-grid">
+                    <button class="num-tag" id="tag-0" onclick="toggleNumTag(this)">0</button>
+                    <button class="num-tag" id="tag-1" onclick="toggleNumTag(this)">1</button>
+                    <button class="num-tag" id="tag-2" onclick="toggleNumTag(this)">2</button>
+                    <button class="num-tag" id="tag-3" onclick="toggleNumTag(this)">3</button>
+                    <button class="num-tag" id="tag-4" onclick="toggleNumTag(this)">4</button>
+                    <button class="num-tag" id="tag-5" onclick="toggleNumTag(this)">5</button>
+                    <button class="num-tag" id="tag-6" onclick="toggleNumTag(this)">6</button>
+                    <button class="num-tag" id="tag-7" onclick="toggleNumTag(this)">7</button>
+                    <button class="num-tag" id="tag-8" onclick="toggleNumTag(this)">8</button>
+                    <button class="num-tag" id="tag-9" onclick="toggleNumTag(this)">9</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 紀錄面板 -->
+        <div class="history-container">
+            <div class="history-column">
+                <h3>👤 你的猜測紀錄</h3>
+                <ul id="user-history"></ul>
+            </div>
+            <div id="ai-history-col" class="history-column">
+                <h3>🤖 AI 猜測紀錄</h3>
+                <ul id="ai-history"></ul>
+            </div>
+        </div>
+
+        <!-- 成就牆與分享 -->
+        <div class="achieve-card">
+            <h3>🏅 成就勳章</h3>
+            <div class="achieve-grid" id="achieve-grid">
+                <!-- JS 自動填入 -->
+            </div>
+        </div>
+
+        <div class="share-box hidden" id="share-box">
+            <button class="btn-success full-width" onclick="copyShareCode()">📤 複製 Wordle 風格戰績圖卡</button>
+        </div>
+
+        <button class="btn-danger full-width" onclick="resetGame()">🔄 重新開始遊戲</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
